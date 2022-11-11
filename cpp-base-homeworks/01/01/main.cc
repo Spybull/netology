@@ -106,24 +106,18 @@ int main()
 
 void lSwap(int *ptr, int sz) {
 
-    int *tmp = new int[sz];
-
-    for(int i = 1, j = 0; i < sz; ++i && ++j)
-        tmp[j] = ptr[i];
-
-    tmp[sz-1] = ptr[0];
-    memcpy(ptr, tmp, sz * sizeof(int));
-    delete []tmp;
+    for (int i = 0; i < sz-1; ++i) {
+        int temp = ptr[i];
+        ptr[i] = ptr[i+1];
+        ptr[i+1] = temp;
+    }
 }
 
 void rSwap(int *ptr, int sz) {
 
-    int *tmp = new int[sz];
-
-    for(int i = 1, j = 0; i < sz; ++i && ++j)
-        tmp[i] = ptr[j];
-
-    tmp[0] = ptr[sz-1];
-    memcpy(ptr, tmp, sz*sizeof(int));
-    delete []tmp;
+    for(int i = 0; i < sz-1; ++i) {
+        int temp = ptr[i];
+        ptr[i] = ptr[sz-1];
+        ptr[sz-1] = temp;
+    }
 }

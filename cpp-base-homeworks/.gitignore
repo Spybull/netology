@@ -33,3 +33,7 @@
 **/*.exe
 **/*.out
 **/*.app
+
+# Other
+**/*out.*
+**/.vscode

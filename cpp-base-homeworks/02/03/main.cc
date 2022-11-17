@@ -8,7 +8,7 @@ struct Address {
     unsigned int index;
 };
 
-void print(const Address addr) {
+void print(const Address &addr) {
     std::cout << "Город: "         << addr.city     << std::endl
               << "Улица: "         << addr.street   << std::endl
               << "Номер дома: "    << addr.homeNum  << std::endl

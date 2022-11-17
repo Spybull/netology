@@ -24,12 +24,6 @@ template <class Y> void ReadInput(const char *msg, Y &input) {
     }
 }
 
-void ChangeBalance(Credit *credit, float newSum) {
-
-    if (newSum == 0) return;
-    credit->balance += newSum;
-}
-
 void PrintInfo(const Credit *credit) {
     std::cout << credit->name << " "
               << credit->num  << " "
@@ -54,7 +48,7 @@ int main()
     ReadInput("Введите баланс: ", credit->balance);
     ReadInput("Введите новый баланс: ", newBalance);
 
-    ChangeBalance(credit, newBalance);
+    credit->balance += newBalance;
     PrintInfo(credit);
 
     delete credit;

@@ -24,7 +24,7 @@ class address {
         void sort(address *addr, int n) {
             for(int i = 0; i + 1 < n; ++i) {
                 for(int j = 0; j + 1 < n - i; ++j) {
-                    if(addr[j].city < addr[j + 1].city) {
+                    if(addr[j + 1].city < addr[j].city) {
                         swap(addr[j+1].city, addr[j].city);
                     }
                 }
@@ -86,7 +86,7 @@ int main()
     addr->sort(addr, nAddr);
     
     out << nAddr << "\n";
-    for(int i = nAddr-1; i >= 0; --i)
+    for(int i = 0; i < nAddr; ++i)
         out << addr[i].getString() << "\n";
 
     in.close();

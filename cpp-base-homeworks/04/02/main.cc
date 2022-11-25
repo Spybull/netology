@@ -25,7 +25,7 @@ class address {
             for(int i = 0; i + 1 < n; ++i) {
                 for(int j = 0; j + 1 < n - i; ++j) {
                     if(addr[j + 1].city < addr[j].city) {
-                        swap(addr[j+1].city, addr[j].city);
+                        swap(addr[j+1], addr[j]);
                     }
                 }
             }
@@ -37,8 +37,8 @@ class address {
         unsigned int houseNum;
         unsigned int apartNum;
 
-        void swap(std::string &x, std::string &y) {
-            std::string tmp = x;
+        void swap(address &x, address &y) {
+            address tmp = x;
             x = y;
             y = tmp;
         }

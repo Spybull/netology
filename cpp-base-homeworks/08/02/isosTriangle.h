@@ -3,6 +3,6 @@
 #include "triangle.h"
 class IsosTriangle : public Triangle {
     public:
-        IsosTriangle(int a, int b, int A, int B);
+        IsosTriangle(int a, int b, int c, int A, int B, int C);
 };
 #endif

@@ -9,10 +9,8 @@ Triangle::Triangle(int a, int b, int c, int A, int B, int C, std::string name)
     , angles{A, B, C}
 {
     printInfo();
-    if ( (A + B + C) != 180 ) {
-        throw Exceptions("Can't create! Because: sum of angles are not equal 180");
-    }
-    std::cout << "Created\n";
+    if ( (A + B + C) != 180 )
+        throw FigureException("Can't create! Because: sum of angles are not equal 180");
 }
 
 void Triangle::printInfo() {

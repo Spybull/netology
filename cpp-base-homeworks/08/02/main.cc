@@ -15,40 +15,66 @@ int main()
 {
     try {
         Triangle tri(10, 20, 30, 40, 60, 80);
+        std::cout << "Created\n";
     } catch(std::exception &ex) {
         std::cout << ex.what() << std::endl;
     }
 
     try {
-        RightTriangle riTri1(10, 20, 30, 30, 60);
-        RightTriangle riTri2(10, 20, 30, 40, 60);
+        RightTriangle riTri1(10, 20, 30, 30, 60, 90);
+        std::cout << "Created\n";
+
+        RightTriangle riTri2(10, 20, 30, 40, 60, 80);
+        std::cout << "Created\n";
     } catch(std::exception &ex) {
         std::cout << ex.what() << std::endl;
     }
 
     try {
-        EquilTriangle equTri(30);
-        IsosTriangle  isosTri(10, 20, 50, 30);
+        IsosTriangle  isosTri(1, 20, 10, 50, 80, 50);
+        std::cout << "Created\n";
+    } catch(std::exception &ex) {
+        std::cout << ex.what() << std::endl;
+    }
+
+    try {
+        EquilTriangle equTri(20, 20, 20, 60, 60, 61);
+        std::cout << "Created\n";
     } catch(std::exception &ex) {
         std::cout << ex.what() << std::endl;
     }
 
     try {
         Quadrilateral qua(10, 20, 30, 40, 50, 60, 70, 80);
+        std::cout << "Created\n";
     } catch(std::exception &ex) {
         std::cout << ex.what() << std::endl;
     }
     
     try {
-        Rectangle rec(10, 20);
-        Square squ(20);
-        Parallelogram par(20, 30, 30, 40);
+        Rectangle rec(10, 20, 10, 20, 80, 100, 90, 90);
+        std::cout << "Created\n";
     } catch(std::exception &ex) {
         std::cout << ex.what() << std::endl;
     }
 
     try {
-        Rhombus rom(30, 30, 40);
+       Square squ(10, 20, 10, 20, 80, 100, 90, 90);
+       std::cout << "Created\n";
+    } catch(const std::exception& e) {
+        std::cerr << e.what() << '\n';
+    }
+    
+    try {
+        Parallelogram par(10, 20, 10, 20, 90, 90, 90, 90);
+        std::cout << "Created\n";
+    } catch(const std::exception& e) {
+        std::cerr << e.what() << '\n';
+    }
+    
+    try {
+        Rhombus rom(10, 20, 10, 20, 90, 90, 90, 90);
+        std::cout << "Created\n";
     } catch(std::exception &ex) {
         std::cout << ex.what() << std::endl;
     }

@@ -11,8 +11,7 @@ Quadrilateral::Quadrilateral(int a, int b, int c, int d, int A, int B, int C, in
 {
     printInfo();
     if ( (A + B + C + D) != 360 )
-        throw Exceptions("Can't create! Because: sum of angles are not equal 360");
-    std::cout << "Created\n";
+        throw FigureException("Can't create! Because: sum of angles are not equal 360");
 }
 
 void Quadrilateral::printInfo() {

@@ -5,7 +5,7 @@ int function(std::string str, int forbidden_length)
     int len = static_cast<int>(str.length());
 
     if ( forbidden_length == len )
-        throw "bad_length";
+        throw std::runtime_error("bad_length");
 
     return len;
 }
@@ -46,10 +46,10 @@ int main()
             std::cout << "Length of word " << word << " is "
                       << wordLen << std::endl;
 
-        } catch(const char *) {
+        } catch(std::exception &ex) {
 
-            std::cout << "You've entered a word "
-                         "of forbidden length! Bye-Bye"
+            std::cout << "[" << ex.what() << "] ";
+            std::cout << "You've entered a word of forbidden length! Bye-Bye"
                       << std::endl;
             return -1;
         }

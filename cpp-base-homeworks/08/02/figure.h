@@ -1,15 +1,6 @@
 #ifndef FIGURE_H
 #define FIGURE_H
 #include <iostream>
-#include <stdexcept>
-
-/// @brief exception indicating access out of the defined range
-class sideCountZeroEx : public std::exception {
-
-    public:
-        
-};
-
 class Figure
 {
     public:

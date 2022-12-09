@@ -4,6 +4,6 @@
 
 class Square : public Quadrilateral {
     public:
-        Square(int a);
+        Square(int a, int b, int c, int d, int A, int B, int C, int D);
 };
 #endif

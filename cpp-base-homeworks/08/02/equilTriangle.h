@@ -4,6 +4,6 @@
 
 class EquilTriangle : public Triangle {
     public:
-        EquilTriangle(int a);
+        EquilTriangle(int a, int b, int c, int A, int B, int C);
 };
 #endif

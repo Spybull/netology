@@ -1,7 +1,7 @@
 #include "exceptions.h"
 
-Exceptions::Exceptions(std::string error) : err(error) {}
+FigureException::FigureException(std::string error) : err(error) {}
         
-const char *Exceptions::what() const noexcept {
+const char *FigureException::what() const noexcept {
     return err.c_str();
 }

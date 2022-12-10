@@ -4,7 +4,7 @@
 class Figure
 {
     public:
-        Figure();
+        Figure(int _sides_count);
         int getSidesCount();
         std::string getName();
         virtual void printInfo();

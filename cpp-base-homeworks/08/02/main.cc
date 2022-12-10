@@ -1,18 +1,27 @@
 #include <iostream>
-#include "exceptions.h"
-#include "figure.h"
-#include "triangle.h"
-#include "rightTriangle.h"
-#include "isosTriangle.h"
-#include "equilTriangle.h"
-#include "quadrilateral.h"
-#include "rectangle.h"
-#include "square.h"
-#include "parallelogram.h"
-#include "rhombus.h"
+#include "inc/exceptions.h"
+#include "inc/figure.h"
+
+#include "inc/triangle.h"
+#include "inc/rightTriangle.h"
+#include "inc/isosTriangle.h"
+#include "inc/equilTriangle.h"
+
+#include "inc/quadrilateral.h"
+#include "inc/rectangle.h"
+#include "inc/square.h"
+#include "inc/parallelogram.h"
+#include "inc/rhombus.h"
+
 
 int main()
 {
+    try {
+        Figure fig(1);
+    } catch(std::exception &ex) {
+        std::cout << ex.what() << std::endl;
+    }
+
     try {
         Triangle tri(10, 20, 30, 40, 60, 80);
         std::cout << "Created\n";
@@ -23,8 +32,7 @@ int main()
     try {
         RightTriangle riTri1(10, 20, 30, 30, 60, 90);
         std::cout << "Created\n";
-
-        RightTriangle riTri2(10, 20, 30, 40, 60, 80);
+        RightTriangle riTri2(10, 20, 30, 30, 60, 90);
         std::cout << "Created\n";
     } catch(std::exception &ex) {
         std::cout << ex.what() << std::endl;

@@ -1,4 +1,4 @@
-#include "quadrilateral.h"
+#include "inc/quadrilateral.h"
 
 Quadrilateral::Quadrilateral(int a, int b, int c, int d, int A, int B, int C, int D)
     : Quadrilateral(a, b, c, d, A, B, C, D, "Quadrilateral")
@@ -11,11 +11,10 @@ Quadrilateral::Quadrilateral(int a, int b, int c, int d, int A, int B, int C, in
 {
     printInfo();
     if ( (A + B + C + D) != 360 )
-        throw FigureException("Can't create! Because: sum of angles are not equal 360");
+        throw FigureException(FigureExitCodes::ANGLES_SUM_NOT_EQ_360);
 }
 
 void Quadrilateral::printInfo() {
-    Figure::printInfo();
 
     std::cout << "(sides ";
     getSides();

@@ -1,19 +1,28 @@
-CXX = g++
-CXXFLAGS = -Wall -Wextra -pedantic -I.
+all: a.out
 
-DEPS = figure.h triangle.h rightTriangle.h isosTriangle.h equilTriangle.h\
-	   quadrilateral.h rectangle.h square.h parallelogram.h rhombus.h exceptions.h
+INCDIR=inc
+ODIR=obj
 
-OBJ = main.o figure.o triangle.o rightTriangle.o isosTriangle.o equilTriangle.o\
-	  quadrilateral.o rectangle.o square.o parallelogram.o rhombus.o exceptions.o
+CXX=g++
+CXXFLAGS=-Wall -Wextra -pedantic -I$(INCDIR)
 
-%.o: %.cc $(DEPS)
+_DEPS = figure.h triangle.h rightTriangle.h isosTriangle.h\
+		equilTriangle.h quadrilateral.h rectangle.h square.h\
+		parallelogram.h rhombus.h exceptions.h
+DEPS = $(patsubst %,$(INCDIR)/%,$(_DEPS))
+
+_OBJ = main.o figure.o triangle.o rightTriangle.o\
+	   isosTriangle.o equilTriangle.o quadrilateral.o\
+	   rectangle.o square.o parallelogram.o rhombus.o exceptions.o
+OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
+
+$(ODIR)/%.o: %.cc $(DEPS)
 	$(CXX) -c -o $@ $< $(CXXFLAGS)
 
-main: $(OBJ)
-	$(CXX) $^ $(CXXFLAGS)
+a.out: $(OBJ)
+	$(CXX) -o $@ $^ $(CXXFLAGS)
 
-.PHONY: clean
+.PHONY: all clean
 
 clean:
-	rm -f $(OBJ) a.out
+	rm -f $(OBJ) *~ $(INCDIR)*~ a.out

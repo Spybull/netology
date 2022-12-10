@@ -1,16 +1,16 @@
-#include "parallelogram.h"
+#include "inc/parallelogram.h"
 Parallelogram::Parallelogram(int a, int b, int c, int d, int A, int B, int C, int D)
     : Quadrilateral(a, b, c, d, A, B, C, D, "Parallelogram")
 {
     if ( a != c )
-        throw FigureException("Can't create! Because: a side != c side");
+        throw FigureException(FigureExitCodes::SIDES_A_C_NOT_EQUAL);
     
     if ( b != d )
-        throw FigureException("Can't create! Because: b side != d side");
+        throw FigureException(FigureExitCodes::SIDES_B_D_NOT_EQUAL);
 
      if ( A != C )
-        throw FigureException("Can't create! Because: A angle != C angle");
+        throw FigureException(FigureExitCodes::ANGLES_A_C_NOT_EQUAL);
 
      if ( B != D )
-        throw FigureException("Can't create! Because: B angle != D angle");
+        throw FigureException(FigureExitCodes::ANGLES_B_D_NOT_EQUAL);
 }

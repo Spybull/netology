@@ -1,4 +1,4 @@
-#include "triangle.h"
+#include "inc/triangle.h"
 
 Triangle::Triangle(int a, int b, int c, int A, int B, int C)
     : Triangle(a, b, c, A, B, C, "Triangle") {}
@@ -8,14 +8,12 @@ Triangle::Triangle(int a, int b, int c, int A, int B, int C, std::string name)
     , sides {a, b, c}
     , angles{A, B, C}
 {
-    printInfo();
+    this->printInfo();
     if ( (A + B + C) != 180 )
-        throw FigureException("Can't create! Because: sum of angles are not equal 180");
+        throw FigureException(FigureExitCodes::ANGLES_SUM_NOT_EQ_180);
 }
 
 void Triangle::printInfo() {
-
-    Figure::printInfo();
 
     std::cout << "(sides ";
     getSides();

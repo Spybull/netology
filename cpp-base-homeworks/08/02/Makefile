@@ -1,7 +1,9 @@
-all: a.out
+all: dirs a.out
 
 INCDIR=inc
 ODIR=obj
+
+MKDIR_P = mkdir -p
 
 CXX=g++
 CXXFLAGS=-Wall -Wextra -pedantic -I$(INCDIR)
@@ -16,13 +18,19 @@ _OBJ = main.o figure.o triangle.o rightTriangle.o\
 	   rectangle.o square.o parallelogram.o rhombus.o exceptions.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
+
+dirs: $(ODIR)
+$(ODIR):
+	${MKDIR_P} $(ODIR)
+
 $(ODIR)/%.o: %.cc $(DEPS)
 	$(CXX) -c -o $@ $< $(CXXFLAGS)
 
 a.out: $(OBJ)
 	$(CXX) -o $@ $^ $(CXXFLAGS)
 
-.PHONY: all clean
+.PHONY: all clean dirs
 
 clean:
 	rm -f $(OBJ) *~ $(INCDIR)*~ a.out
+	rm -rf $(ODIR)

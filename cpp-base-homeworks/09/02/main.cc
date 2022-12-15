@@ -7,11 +7,7 @@ private:
 	int numerator_;
 	int denominator_;
 
-    inline double div() const {
-        return static_cast<double>(numerator_)/denominator_;
-    }
-
-    int NOD(int d1, int d2) {
+   int nod(int d1, int d2) {
         int r = 0;
         while(d2 > 0) {
             r = d1 % d2;
@@ -21,14 +17,14 @@ private:
         return d1;
     }
 
-    void reduceFraction(int &n, int &d) {
-        int nod = NOD(abs(n), d);
-        n /= nod;
-        d /= nod;
+    void reduce(int &n, int &d) {
+        int r = nod(abs(n), d);
+        n /= r;
+        d /= r;
     }
 
 public:
-    const std::string getFraction(){
+    const std::string toString() const {
         return std::to_string(numerator_) + "/" + std::to_string(denominator_);
     }
 
@@ -43,18 +39,37 @@ public:
 
     /* == and != */
     bool operator==(Fraction fRight) {
-        return div() == fRight.div() ? true : false;
+        reduce(numerator_, denominator_);
+        reduce(fRight.numerator_, fRight.denominator_);
+
+        if (denominator_ == fRight.denominator_)
+            return (numerator_ == fRight.numerator_);
+
+        return false;
     }
     bool operator!=(Fraction fRight) {
         return !(*this == fRight);
     }
 
-    /* > and < */
+    // /* > and < */
     bool operator>(Fraction fRight) {
-        return div() > fRight.div() ? true : false;
+
+        reduce(numerator_, denominator_);
+        reduce(fRight.numerator_, fRight.denominator_);
+
+        if (denominator_ == fRight.denominator_)
+            return (numerator_ > fRight.numerator_);
+        else if (numerator_ == fRight.numerator_)
+            return (denominator_ < fRight.denominator_);
+        else {
+            int n1 = numerator_ * fRight.denominator_;
+            int n2 = fRight.numerator_ * denominator_;
+            return (n1 > n2);
+        }
+
     }
     bool operator<(Fraction fRight)  {
-        return fRight > *this ? true : false;
+        return (fRight > *this);
     }
 
     // <= and  >=
@@ -76,7 +91,7 @@ public:
             f2 = denominator_ * fRight.denominator_;
         }
 
-        reduceFraction(f1, f2);
+        reduce(f1, f2);
         return Fraction(f1, f2);
     }
 
@@ -90,14 +105,14 @@ public:
             f1 = numerator_ * fRight.denominator_ - fRight.numerator_ * denominator_;
             f2 = denominator_ * fRight.denominator_;
         }
-        reduceFraction(f1, f2);
+        reduce(f1, f2);
         return Fraction(f1, f2);
     }
 
     Fraction operator*(const Fraction &fRight) {
         int f1 = numerator_ * fRight.numerator_;
         int f2 = denominator_ * fRight.denominator_;
-        reduceFraction(f1, f2);
+        reduce(f1, f2);
         return Fraction(f1, f2);
     }
 
@@ -107,16 +122,28 @@ public:
 
     Fraction& operator++() {
         numerator_ += denominator_;
-        reduceFraction(numerator_, denominator_);
+        reduce(numerator_, denominator_);
         return *this;
     }
     Fraction& operator--() {
         numerator_ -= denominator_;
+        reduce(numerator_, denominator_);
         return *this;
     }
 
-    Fraction operator++(int) { return ++(*this); }
-    Fraction& operator--(int) { return --(*this); }
+    Fraction operator++(int) {
+        Fraction tmp = *this;
+        numerator_ += denominator_;
+        reduce(numerator_, denominator_);
+        return tmp;
+    }
+
+    Fraction operator--(int) {
+        Fraction tmp = *this;
+        numerator_ -= denominator_;
+        reduce(numerator_, denominator_);
+        return tmp;
+    }
 };
 
 void userInput(int &input, const char *msg)
@@ -139,59 +166,59 @@ int main()
 
     userInput(enumerator_, "Enter enumerator 1: ");
 
-denominator_first:
-    userInput(denominator_, "Enter denominator 1: ");
-
-    if (denominator_ == 0) {
-        std::cout << "Division by zero, retype denominator\n";
-        goto denominator_first;
+    while (true) {
+        userInput(denominator_, "Enter denominator 1: ");
+        if (denominator_ == 0)
+            std::cout << "Division by zero, retype denominator\n";
+        else
+            break;
     }
 
     Fraction f1(enumerator_, denominator_);
 
     userInput(enumerator_, "Enter enumerator 2: ");
-    
-denominator_second:
-    userInput(denominator_, "Enter denominator 2: ");
 
-    if (denominator_ == 0) {
-        std::cout << "Division by zero, retype denominator\n";
-        goto denominator_second;
+    while (true) {
+        userInput(denominator_, "Enter denominator 2: ");
+        if (denominator_ == 0)
+            std::cout << "Division by zero, retype denominator\n";
+        else
+            break;
     }
 
     Fraction f2(enumerator_, denominator_);
 
-    std::cout << f1.getFraction() << " + "
-              << f2.getFraction() << " = "
-              << (f1 + f2).getFraction() << std::endl;
+    std::cout << f1.toString() << " + "
+              << f2.toString() << " = "
+              << (f1 + f2).toString() << std::endl;
 
-    std::cout << f1.getFraction() << " - "
-              << f2.getFraction() << " = "
-              << (f1 - f2).getFraction() << std::endl;
+    std::cout << f1.toString() << " - "
+              << f2.toString() << " = "
+              << (f1 - f2).toString() << std::endl;
 
-    std::cout << f1.getFraction() << " * "
-              << f2.getFraction() << " = "
-              << (f1 * f2).getFraction() << std::endl;
+    std::cout << f1.toString() << " * "
+              << f2.toString() << " = "
+              << (f1 * f2).toString() << std::endl;
 
-    std::cout << f1.getFraction() << " / "
-              << f2.getFraction() << " = "
-              << (f1 / f2).getFraction() << std::endl;
+    std::cout << f1.toString() << " / "
+              << f2.toString() << " = "
+              << (f1 / f2).toString() << std::endl;
 
-    std::cout << "++" << f1.getFraction() << " * "
-              << f2.getFraction() << " = "
-              << (++f1 * f2).getFraction() << std::endl;
+    std::cout << "++" << f1.toString() << " * "
+              << f2.toString() << " = "
+              << (++f1 * f2).toString() << std::endl;
 
     std::cout << "Value of 1 fraction is: "
-              << f1.getFraction() << std::endl;
+              << f1.toString() << std::endl;
     
-    std::cout << f1.getFraction() << "--"
-              << " * " << f2.getFraction()
-              << " = " << (f1-- * f2).getFraction()
+    
+    std::cout << f1.toString() << "--"
+              << " * " << f2.toString()
+              << " = " << (f1-- * f2).toString()
               << std::endl;
 
     std::cout << "Value of 1 fraction is: "
-              << f1.getFraction() << std::endl;
-
+              << f1.toString() << std::endl;
 
 	return 0;
 }

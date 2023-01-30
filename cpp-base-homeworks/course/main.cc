@@ -17,7 +17,11 @@
 #include "racepool.h"
 #include "transport.h"
 
-
+#ifdef linux 
+    const char* clear_screen = "clear";
+#elif _WIN32
+    const char* clear_screen = "cls";
+#endif
 
 void safe_input_number(const char *msg, int &input) {
 
@@ -28,7 +32,7 @@ void safe_input_number(const char *msg, int &input) {
             break;
         }
         else {
-            std::cerr << "Error, input value must contain only numbers!\n";
+            std::cerr << "Error, input value must contain only digit numbers!\n";
             std::cin.clear();
             std::cin.ignore(0xFFFF, '\n');
         }
@@ -128,19 +132,19 @@ Race *race_init() {
             break;
 
             default:
-                system("clear");
+                system(clear_screen);
                 std::cout << "Unknown type of racing!\n";
                 std::cout << "Hit any button, for continue...\n";
                 std::cin.ignore(0xFFFF, '\n');
                 std::cin.get();
-                system("clear");
+                system(clear_screen);
                 raceType = -1;
             break;
         }
 
     } while(raceType < 0);
 
-    system("clear");
+    system(clear_screen);
     for(;;)
     {
         safe_input_number("Set up distance (must be positive): ", distance);
@@ -178,7 +182,7 @@ int main()
     int poolSize = rcPool.getPoolSize();
     Race *rc;
     
-    system("clear");
+    system(clear_screen);
     
     std::cout << "Welcome to the racing simulator!\n";
     for(;;) /* Main loop */
@@ -191,7 +195,7 @@ int main()
         }
 
         do {
-            system("clear");
+            system(clear_screen);
 
             Transport *curr = rcPool.head;
             nowRegistered = rc->getRegisteredCount(curr);
@@ -251,7 +255,7 @@ int main()
             std::string msg;
             for(;;)
             {
-                system("clear");
+                system(clear_screen);
                 std::cout << msg;
 
                 curr = rcPool.head;
@@ -271,7 +275,7 @@ int main()
                     curr = curr->next;
                 }
                 
-                safe_input_number("Select a transport or 0 for exit from registration: ", selected);
+                safe_input_number( "Select a transport or 0 for exit from registration: ", selected);
                 if ( selected > poolSize || selected < 0)
                     msg = "Unknown transport, choose from list below\n";
                 else if (!selected)

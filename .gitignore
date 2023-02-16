@@ -51,3 +51,6 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 my_first_cmake_program
+
+cpp-advanced/**/bin/*
+cpp-advanced/**/binary/*

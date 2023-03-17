@@ -7,6 +7,10 @@ class table {
     int row, col;
 
     public:
+        table(table const &) = delete;
+        table &operator=(table const &) = delete;
+        table() = default;
+
         table(int row, int col) : row(row), col(col) {
 
             ptr = new T*[row];
@@ -32,7 +36,6 @@ class table {
                 delete []ptr[i];
             delete []ptr;
         }
-
 };
 
 

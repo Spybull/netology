@@ -3,7 +3,6 @@
 
 class big_integer {
     private:
-        std::string result;
         std::string str;
         bool isOverFlow;
         bool isNegative;

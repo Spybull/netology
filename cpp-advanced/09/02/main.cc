@@ -7,7 +7,13 @@ class big_integer {
         bool isOverFlow;
         bool isNegative;
         int integerNumber;
+
+        int isOvfOperation(const big_integer &, const char) const noexcept;
+
     public:
+        big_integer(const big_integer &s) = default;
+        big_integer &operator=(const big_integer &s) = default;
+        ~big_integer() = default;
 
         big_integer()
         : str("0")
@@ -15,8 +21,7 @@ class big_integer {
         , isNegative(false)
         , integerNumber(0) {}
 
-        big_integer(std::string s) : big_integer()
-        {
+        big_integer(std::string s) : big_integer() {
             if ( s.length() )
                 str = s;
 
@@ -33,8 +38,6 @@ class big_integer {
                 integerNumber = check;
         }
 
-        big_integer(const big_integer &s) = default;
-        big_integer &operator=(const big_integer &s) = default;
 
         big_integer(big_integer &&s) {
             str = std::move(s.str);
@@ -68,32 +71,10 @@ class big_integer {
             return *this;
         }
 
-        big_integer operator=(const std::string &s) {
+        big_integer &operator=(const std::string &&s) {
             return (*this = std::move(big_integer(s)));
         }
 
-        int isOvfOperation(const big_integer &s2, const char op) const noexcept {
-
-            int checkOvf = 0;
-            if (!isOverFlow && !s2.isOverFlow)
-            {
-                switch(op)
-                {
-                    case '+':
-                        checkOvf = integerNumber + s2.integerNumber;
-                    break;
-
-                    case '*':
-                        checkOvf = integerNumber * s2.integerNumber;
-                    break;
-
-                    default:
-                        break;
-                }
-            }
-
-            return checkOvf;
-        }
 
         big_integer operator+(big_integer &s2)
         {
@@ -203,17 +184,10 @@ class big_integer {
         friend std::ostream& operator<<(std::ostream& os, const big_integer& s);
 };
 
-std::ostream& operator<<(std::ostream& os, const big_integer& s)
-{
-    os << s.str;
-    return os;
-}
-
 int main()
 {
     auto number1 = big_integer("4");
     auto number2 = big_integer("1");
-    
     std::cout << "number1: " << number1 << std::endl;
     std::cout << "number2: " << number2 << std::endl;
 
@@ -235,10 +209,38 @@ int main()
     result = number1 + number2;
     std::cout << number1 << " + " << number2 << " = " << result << std::endl;
 
-    multiplier = 5;
+    multiplier = 500;
     result2 = result * multiplier;
     std::cout << result << " * " << multiplier << " = " << result2 << std::endl;
     std::cout << "--------------------------------------" << std::endl;
 
     return 0;
+}
+
+int big_integer::isOvfOperation(const big_integer &s2, const char op) const noexcept
+{
+    int checkOvf = 0;
+    if (!isOverFlow && !s2.isOverFlow)
+    {
+        switch(op)
+        {
+            case '+':
+                checkOvf = integerNumber + s2.integerNumber;
+            break;
+
+            case '*':
+                checkOvf = integerNumber * s2.integerNumber;
+            break;
+
+            default:
+                break;
+        }
+    }
+
+    return checkOvf;
+}
+
+std::ostream& operator<<(std::ostream& os, const big_integer& s) {
+    os << s.str;
+    return os;
 }

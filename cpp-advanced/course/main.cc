@@ -109,7 +109,8 @@ class ini_parser {
 
                     ++section_count;
                     current_section = trim(getSectionName(line));
-                    section[current_section] = {};
+                    if (section.find(current_section) == section.end())
+                        section[current_section] = {};
                 }
                 else if ( isKv(line) ) {
 
@@ -124,19 +125,19 @@ class ini_parser {
                         throw ini_exceptions(line_count, "Key can't be empty!");
 
                     std::string value = trim(line.substr(eqPos + 1));
-                    section[current_section].insert({key, value});
+                    section[current_section].insert_or_assign(key, value);
                 } else {
                     throw ini_exceptions(line_count, "JUST string");
                 }
  
             } // end of main loop
 
-            // for (const auto &t : section) 
-            // {
-            //     std::cout << t.first << std::endl;
-            //     for (const auto &m : t.second)
-            //         std::cout << m.first << " = " << m.second << std::endl;
-            // }
+            for (const auto &t : section) 
+            {
+                std::cout << t.first << std::endl;
+                for (const auto &m : t.second)
+                    std::cout << m.first << " = " << m.second << std::endl;
+            }
         }
 
         inline bool is_number(const std::string& s) {
@@ -154,7 +155,7 @@ class ini_parser {
             return !s.empty() && it == s.end();
         }
 
-        double chekcOUT(std::string str, const std::type_info &type)
+        void chekcOUT(const std::string &str, const std::type_info &type)
         {
             bool n = is_number(str);
             if (n && typeid(std::string) == type )
@@ -162,8 +163,6 @@ class ini_parser {
             
             if ( !n && typeid(std::string) != type )
                 throw std::runtime_error("Wrong types!");
-
-            return std::atof(str.c_str());
         }
 
         template<typename T>
@@ -181,9 +180,20 @@ class ini_parser {
 
             if ( it_kv == it->second.end() )
                 throw std::runtime_error("Key not found");
+
+            bool n = is_number(it_kv->second);
+            if (n && typeid(std::string) == typeid(T) )
+                throw std::runtime_error("Wrong requested type of string!");
             
-            chekcOUT(it_kv->second, typeid(T));
-            return 0;
+            if ( !n && typeid(std::string) != typeid(T) )
+                throw std::runtime_error("Wrong types!");
+
+            if constexpr(std::is_integral<T>::value)
+                return atoi(it_kv->second.c_str());
+            else if constexpr(std::is_floating_point<T>::value)
+                return atof(it_kv->second.c_str());
+            else if constexpr(std::is_base_of<std::string, T>::value)
+                return it_kv->second;
         }
 
         ini_parser(const ini_parser &) = delete;
@@ -200,7 +210,7 @@ int main(int argc, char const *argv[])
     try
     {
         ini_parser parser("test.ini");
-        std::cout << parser.get_value<std::string>("Section1.var1") << std::endl;
+        std::cout << parser.get_value<float>("Section1.var1") << std::endl;
     } catch (std::exception &e) {
         std::cout << e.what() << std::endl;
     }

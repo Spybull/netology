@@ -6,6 +6,8 @@
 #include <exception>
 #include <algorithm>
 
+typedef std::map<std::string, std::string> map_ss;
+
 class ini_exceptions : public std::exception {
     private:
         int posInLine;
@@ -15,6 +17,13 @@ class ini_exceptions : public std::exception {
     public:
         ini_exceptions(int lPos, std::string msg) : posInLine(lPos) {
             message = "Err:" + std::to_string(posInLine) + ": " + msg;
+        }
+
+        ini_exceptions(std::string keyVal, map_ss kv) {
+            std::cout << "Key " << keyVal << " not found. Available keys: " << std::endl;
+            message = "";
+            for (const auto &i : kv)
+                std::cout  << i.first << std::endl;
         }
 
         virtual const char *what() const noexcept override {
@@ -66,6 +75,9 @@ class ini_parser {
                 throw ini_exceptions(line_count, "Section must starts with '['");
 
             // Section must ends with '['
+            if ( section.find_last_of(']') != len - 1 )
+                throw ini_exceptions(line_count, "Not consistent section");
+
             if (section[len - 1] != ']')
                 throw ini_exceptions(line_count, "Section must ends with ']'");
 
@@ -127,17 +139,10 @@ class ini_parser {
                     std::string value = trim(line.substr(eqPos + 1));
                     section[current_section].insert_or_assign(key, value);
                 } else {
-                    throw ini_exceptions(line_count, "JUST string");
+                    throw ini_exceptions(line_count, "It's not a key, just string");
                 }
  
             } // end of main loop
-
-            for (const auto &t : section) 
-            {
-                std::cout << t.first << std::endl;
-                for (const auto &m : t.second)
-                    std::cout << m.first << " = " << m.second << std::endl;
-            }
         }
 
         inline bool is_number(const std::string& s) {
@@ -176,10 +181,12 @@ class ini_parser {
             if ( it == section.end() )
                 throw std::runtime_error("Section not found");
 
-            auto it_kv = it->second.find(std::move(str_val.substr(pp + 1)));
+            std::string finding_key = std::move(str_val.substr(pp + 1));
+            auto it_kv = it->second.find(finding_key);
 
             if ( it_kv == it->second.end() )
-                throw std::runtime_error("Key not found");
+                throw ini_exceptions(finding_key, it->second);
+                // throw std::runtime_error("Key not found");
 
             bool n = is_number(it_kv->second);
             if (n && typeid(std::string) == typeid(T) )
@@ -210,7 +217,7 @@ int main(int argc, char const *argv[])
     try
     {
         ini_parser parser("test.ini");
-        std::cout << parser.get_value<float>("Section1.var1") << std::endl;
+        std::cout << parser.get_value<float>("Section1.var6") << std::endl;
     } catch (std::exception &e) {
         std::cout << e.what() << std::endl;
     }

@@ -58,7 +58,7 @@ class ini_parser {
         inline std::string trim(const std::string &str) {
 
             if (!str.length())
-                return std::move(str);
+                return {};
 
             const char wp[] = {" \t\n"};
 

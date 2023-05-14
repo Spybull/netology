@@ -1,0 +1,3 @@
+[submodule "cpp-sql/05/libpqxx"]
+	path = cpp-sql/05/libpqxx
+	url = https://github.com/jtv/libpqxx.git

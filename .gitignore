@@ -54,3 +54,6 @@ my_first_cmake_program
 
 cpp-advanced/**/bin/*
 cpp-advanced/**/binary/*
+
+cpp-sql/**/bin/*
+cpp-sql/**/binary/*

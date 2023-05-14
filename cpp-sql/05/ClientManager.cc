@@ -36,21 +36,14 @@ ClientManager::ClientManager(const std::string &dbHost,
 , connect(nullptr)
 , connection_error("")
 {
-    try {
-        connect = std::make_unique<pqxx::connection>
-        (
-            "host="  + dbHost +
-            " port=" + dbPort +
-            " dbname=" + dbName +
-            " user=" + dbUser +
-            " password=" + dbPassword
-        );
-
-    } catch (const pqxx::broken_connection &e) {
-        connection_error = e.what();
-    } catch (const std::exception &e) {
-        connection_error = e.what();
-    }
+    connect = std::make_unique<pqxx::connection>
+    (
+        "host="  + dbHost +
+        " port=" + dbPort +
+        " dbname=" + dbName +
+        " user=" + dbUser +
+        " password=" + dbPassword
+    );
 }
 
 int ClientManager::getUserIdByEmail(std::string email) const
@@ -292,10 +285,6 @@ int ClientManager::searchUser(const Client &client) const
         res = result[0][0].as<int>();
     
     return res;
-}
-
-std::string ClientManager::get_connection_error() const {
-    return connection_error;
 }
 
 bool ClientManager::is_connected() const {

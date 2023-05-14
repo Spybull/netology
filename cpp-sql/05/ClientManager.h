@@ -79,6 +79,5 @@ class ClientManager {
         // Метод, позволяющий найти клиента по его данным (имени, фамилии, email-у или телефону)
         int searchUser(const Client &client) const;
 
-        std::string get_connection_error() const;
         bool is_connected() const;
 };

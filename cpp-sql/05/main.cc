@@ -39,15 +39,15 @@ int main()
     {
         ClientManager clientManager("localhost", "5432", HOMEWORK_DATABASE, "postgres", "postgres");
 
-        if (! clientManager.is_connected())
-            std::cerr << "Ошибка подключения: "
-                    << clientManager.get_connection_error()
-                    << std::endl;
+        if (! clientManager.is_connected()) {
+            std::cerr << "Ошибка подключения: " << std::endl;
+            return -2;
+        }
 
-        if (! clientManager.init() ) 
-            std::cerr << "Ошибка инициализации: "
-                    << clientManager.get_connection_error()
-                    << std::endl;
+        if (! clientManager.init() ) {
+            std::cerr << "Ошибка инициализации: " << std::endl;
+            return -3;
+        }
 
         // Добавляем клиентов в БД
         for (const auto &client : clients) {

@@ -14,7 +14,7 @@ sudo apt-get install libpq-dev
 ### BUILD
 ```
 git clone git@github.com:Spybull/netology.git
-cd netology/cpp-sql/
+cd netology/cpp-sql/05
 git submodule update --init --recursive
 cmake .
 cmake --build .

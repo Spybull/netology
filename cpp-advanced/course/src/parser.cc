@@ -4,21 +4,19 @@ namespace ini_parser
 {
     ini_exceptions::ini_exceptions(std::string keyVal, map_ss kv)
     {
-        std::cout << "Key " << keyVal << " not found. Available keys: " << std::endl;
-        message = "";
-        for (const auto &i : kv)
-            std::cout  << i.first << std::endl;
+        message = "Key '" + keyVal + "' not found. Avaliable keys:\n";
+        for (const auto &i : kv) message += i.first + "\n";
     }
     const char *ini_exceptions::what() const noexcept { return message.c_str(); }
     ini_exceptions::ini_exceptions(int lPos, std::string msg)
     : posInLine(lPos)
     {
-        message = "Err:" + std::to_string(posInLine) + ": " + msg;
+        message = "Syntax error at line №" + std::to_string(posInLine) + ": " + msg;
     }
 
     /* Метод проверяет является ли строка s числом
     в строковом представлении. Проверяются целые и дробные числа */
-    bool Parser::is_number(const std::string& s)
+    bool Parser::is_number(const std::string_view& s)
     {
         if (s.empty())
             return false;
@@ -41,9 +39,14 @@ namespace ini_parser
         return true;
     }
 
+    /* Метод проверяет является ли строка s булевым типом */
+    bool Parser::is_boolean(const std::string_view &s) const {
+        return s == "true" || s == "false" ? true : false;
+    }
+
     /* Метод проверяет имеет ли строка kv
     знак равенства "=" */
-    bool Parser::isKv(const std::string &kv) const
+    bool Parser::isKv(const std::string_view &kv) const
     {
         return kv.find_first_of('=') != std::string::npos ?
             true : false;
@@ -51,7 +54,7 @@ namespace ini_parser
 
     /* Метод удаляет пробелы, символы табуляции и новые строки
     в конце и начале строки str */
-    std::string Parser::trim(const std::string &str)
+    std::string_view Parser::trim(const std::string_view &str)
     {
         if (!str.length())
             return {};
@@ -67,22 +70,20 @@ namespace ini_parser
     }
 
     /* Проверка строки section на наличии секционных скобок []*/
-    bool Parser::isSection(std::string &section) {
+    bool Parser::isSection(const std::string_view &section) const {
         return section[0] == '[' || 
                 section[section.length() - 1] == ']' ? 
                 true : false;
     }
 
     /* Проверка строки section на валидность*/
-    bool Parser::isValidSection(const std::string &section) const
+    bool Parser::isValidSection(const std::string_view &section) const
     {
-        // Only one [ and one ]!
-        std::size_t len = section.length();
-
         // Section must starts with '['
         if ( section[0] != '[' )
             throw ini_exceptions(line_count, "Section must starts with '['");
 
+        std::size_t len = section.length();
         // Section must ends with '['
         if ( section.find_last_of(']') != len - 1 )
             throw ini_exceptions(line_count, "Not consistent section");
@@ -97,7 +98,7 @@ namespace ini_parser
         return true;
     }
 
-    std::string Parser::getSectionName(const std::string &section) {
+    std::string_view Parser::getSectionName(const std::string_view &section) {
         return section.substr(1, section.length() - 2);
     }
 
@@ -111,12 +112,12 @@ namespace ini_parser
         if ( ! In.is_open() )
             throw std::runtime_error("Could not open file...");
 
-        std::string line, current_section;
+        std::string line, current_section;        
         while (std::getline(In, line))
         {
             size_t pp = line.find_first_of(';');
             if ( pp != std::string::npos )
-                line = line.erase(pp);
+                line = line.substr(0, pp);
 
             line = trim(line);
             ++line_count;
@@ -126,36 +127,35 @@ namespace ini_parser
                 continue;
 
             /* search sections first */
-            if ( isSection(line) && isValidSection(line) ) {
-
+            if ( isSection(line) && isValidSection(line) )
+            {
                 ++section_count;
-                current_section = trim(getSectionName(line));
+                current_section = std::string(trim(getSectionName(line)));
 
                 std::transform(current_section.begin(),
-                                current_section.end(),
-                                current_section.begin(),
-                                ::tolower);
+                               current_section.end(),
+                               current_section.begin(),
+                               ::tolower);
 
-                if (section.find(current_section) == section.end())
-                    section[current_section] = {};
-
-            } else if ( isKv(line) ) {
-
+                section[current_section] = {};
+            }
+            else if ( isKv(line) )
+            {
                 ++kv_count;
                 if ( !section_count )
                     throw ini_exceptions(line_count, "Key-value must be in section");
 
                 size_t eqPos = line.find_first_of('=');
-                std::string key = trim(line.substr(0, eqPos));
+                std::string key = std::string(trim(line.substr(0, eqPos)));
 
                 if ( key.empty() )
                     throw ini_exceptions(line_count, "Key can't be empty!");
 
-                std::string value = trim(line.substr(eqPos + 1));
+                std::string value = std::string(trim(line.substr(eqPos + 1)));
                 section[current_section].insert_or_assign(key, value);
             }
             else
-                throw ini_exceptions(line_count, "It's not a key, just string");
+                throw ini_exceptions(line_count, line);
 
         } // end of main loop
     }

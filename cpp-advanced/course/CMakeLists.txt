@@ -4,19 +4,17 @@ project(course)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Include(FetchContent)
-
-# FetchContent_Declare(
-#   Catch2
-#   GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-#   GIT_TAG        v3.0.1
-# )
-
-# FetchContent_MakeAvailable(Catch2)
+configure_file(
+    ${CMAKE_SOURCE_DIR}/tests/test.ini
+    ${CMAKE_CURRENT_BINARY_DIR}/ COPYONLY
+)
+configure_file(
+    ${CMAKE_SOURCE_DIR}/tests/test_exceptions.ini
+    ${CMAKE_CURRENT_BINARY_DIR}/ COPYONLY
+)
 
 include_directories(include)
 file(GLOB HEADERS "include/*.hh")
 file(GLOB SOURCES "src/*.cc")
 
 add_executable(parser main.cc ${SOURCES} ${HEADERS})
-# target_link_libraries(parser PRIVATE Catch2::Catch2WithMain)

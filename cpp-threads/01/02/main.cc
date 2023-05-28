@@ -9,8 +9,24 @@
 #include <map>
 #include <iomanip>
 #include <array>
+#include <cstdlib>
+#include <stdexcept>
 
-#define MAX_THREADS 16
+bool isNumber(const std::string& s) {
+    try
+    {
+        std::stoi(s);
+        return true;
+    }
+    catch (const std::invalid_argument& ia)
+    {
+        return false;
+    }
+    catch (const std::out_of_range& oor)
+    {
+        return false;
+    }
+}
 
 typedef std::vector<std::pair<std::vector<int>, std::vector<int>>> vpair_vv;
 
@@ -26,6 +42,9 @@ int main()
     std::cout << "Number of hardware cores: "
               << std::thread::hardware_concurrency()
               << std::endl;
+
+    const char* max_thrd = std::getenv("MAX_THREADS");
+    int MAX_THREADS = max_thrd != nullptr && isNumber(max_thrd) ? std::stoi(max_thrd) : 1;
 
     std::mt19937 gen(std::time(nullptr));
     std::uniform_int_distribution<int> dis(0, 10000000);

@@ -32,8 +32,9 @@ class ThreadInfo {
     size_t progress_interval;
 
     public:
-        ThreadInfo(int calcSize)
+        ThreadInfo(int calcSize) : execTime(0)
         {
+
             std::lock_guard<std::mutex> lock(console_mutex);
             uniqId = ++threadCount;
             threadProgress.reserve(PROGRESSBAR_PRECENT);
@@ -71,11 +72,10 @@ class ThreadInfo {
                     progress_counter = 0;
                     cv.notify_one();
                 }
-                auto end = std::chrono::steady_clock::now();
-                execTime = std::chrono::duration<double>(end - start).count();
             }
+            auto end = std::chrono::steady_clock::now();
+            execTime = std::chrono::duration<double>(end - start).count();
         }
-
         void bubbleSort()
         {
             size_t progress_counter = 0;
@@ -105,13 +105,11 @@ class ThreadInfo {
             threadProgress += "|";
             return *this;
         }
-
         ThreadInfo operator++(int){
             ThreadInfo temp = *this;
             threadProgress += "|";
             return temp;
         }
-
 
         void operator()(int algo)
         {
@@ -149,11 +147,19 @@ void printThreadsProgress(std::vector<ThreadInfo> &data)
         {
             std::cout << "Thread № "        << info.getThreadUniqId()
                       << ";\tThread id: "   << info.getThreadId()
-                      << ";\tProgress: "    << info.getProgress()
-                      << ";\tExec time: "   << info.getExecTime();
+                      << ";\tProgress: "    << info.getProgress();
+            if (info.getExecTime())
+                std::cout << ";\tExec time: "   << info.getExecTime();
             std::cout << std::endl;
         }
     }
+}
+
+
+int gen_rand_arr_size() {
+    static std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+    static std::uniform_int_distribution<int> distribution(1000,100000);
+    return distribution(generator);
 }
 
 int main()
@@ -191,15 +197,6 @@ int main()
         return -3;
     }
 
-    int arraySize;
-    std::cout << "Enter array size: ";
-    std::cin >> arraySize;
-
-    if (arraySize <= 0) {
-        std::cout << "Very small array size. Abort\n";
-        return 0;
-    }
-
     std::vector<ThreadInfo> vthreadsInfo;
     std::vector<std::thread> threads;
     vthreadsInfo.reserve(inTh);
@@ -207,7 +204,7 @@ int main()
     
     for(int i = 0; i < inTh; ++i)
     {
-        vthreadsInfo.emplace_back(ThreadInfo(arraySize));
+        vthreadsInfo.emplace_back(ThreadInfo(gen_rand_arr_size()));
         threads.emplace_back(std::ref(vthreadsInfo.back()), calcType);
     }
 

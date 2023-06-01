@@ -26,7 +26,6 @@ void selectionSort(T &arr, size_t size)
         std::promise<int> pr;
         std::future<int> ft_res = pr.get_future();
         std::future<void> task = std::async(std::launch::async, min_idx<T>, arr, i, std::move(pr));
-        task.wait();
         auto midx = ft_res.get();
         std::swap(arr[i], arr[midx]);
     }

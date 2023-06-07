@@ -3,7 +3,7 @@
 Square::Square(const std::vector<Point2D> &p)
 {
 	if (p.size() != 4)
-		throw std::invalid_argument("Square must have exactly 4 points" + std::to_string(points.size()));
+		throw std::invalid_argument("Square must have exactly 4 points");
 
 	points = p;
 
